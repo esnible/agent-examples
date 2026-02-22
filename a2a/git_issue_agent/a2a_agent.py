@@ -39,7 +39,7 @@ def get_agent_card(host: str, port: int):
     skill = AgentSkill(
         id="github_issue_agent",
         name="Github issue agent",
-        description="Answer queries by searching through a given slack server",
+        description="Answer queries about Github issues",
         tags=["git", "github", "issues"],
         examples=[
             "Find me the issues with the most comments in kubernetes/kubernetes",
