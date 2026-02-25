@@ -90,10 +90,21 @@ class CurrencyAgentExecutor(AgentExecutor):
                     break
 
         except AuthenticationError as e:
-            logger.error(f"""CurrencyAgentExecutor reports an authentication error.
+            msg=f"""CurrencyAgentExecutor reports an authentication error.
             When deploying this agent, define environment variable OPENAI_API_KEY manually, or by importing https://github.com/kagenti/agent-examples/blob/main/a2a/a2a_currency_converter/.env.openai
+            Also check `oc -n team1 get secret openai-secret -o jsonpath="{'{'}.data.apikey{'}'}" | base64 -d`.
             The key should match your OpenAI key.
-            {e}""")
+            {e}"""
+            logger.error(msg=msg)
+            updater.update_status(
+                TaskState.input_required,
+                new_agent_text_message(
+                    msg,
+                    task.contextId,
+                    task.id,
+                ),
+                final=True,
+            )
 
         except Exception as e:
             logger.error(f'An error occurred while streaming the response: {e}')
