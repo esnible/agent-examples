@@ -91,12 +91,12 @@ class CurrencyAgentExecutor(AgentExecutor):
 
         except AuthenticationError as e:
             msg=f"""CurrencyAgentExecutor reports an authentication error.\n
-            When importing this agent into Kagenti, expand Environment Variables and Add Variable,
-            or import https://github.com/kagenti/agent-examples/blob/main/a2a/a2a_currency_converter/.env.openai\n
-            Also check
-            `oc -n team1 get secret openai-secret -o jsonpath="{'{'}.data.apikey{'}'}" | base64 -d`
-            The key should match your OpenAI key.\n
-            {e}"""
+When importing this agent into Kagenti, expand Environment Variables and Add Variable,
+or import https://github.com/kagenti/agent-examples/blob/main/a2a/a2a_currency_converter/.env.openai\n
+Also check
+`oc -n team1 get secret openai-secret -o jsonpath="{'{'}.data.apikey{'}'}" | base64 -d`
+The key should match your OpenAI key.\n
+{e}"""
             logger.error(msg=msg)
             updater.update_status(
                 TaskState.input_required,
