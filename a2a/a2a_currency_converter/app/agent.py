@@ -1,3 +1,7 @@
+"""Currency conversion logic for A2A example"""
+
+import os
+
 from collections.abc import AsyncIterable
 from typing import Any, Literal
 
@@ -10,7 +14,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
-import os
 from langchain_openai import ChatOpenAI
 
 

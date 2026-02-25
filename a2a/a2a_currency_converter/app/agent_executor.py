@@ -92,9 +92,9 @@ class CurrencyAgentExecutor(AgentExecutor):
 
         except InternalServerError as e:
             msg=f"""CurrencyAgentExecutor reports an InternalServerError error.\n
-This can happen if the LLM_API_BASE environment variable does not point to an OpenAI server.\n
+This can happen if the agent's LLM_API_BASE environment variable does not point to an OpenAI server.\n
 LLM_API_BASE is {os.getenv("LLM_API_BASE", "undefined")}\n
-{e}"""
+Error: {e}"""
             logger.error(msg=msg)
             updater.update_status(
                 TaskState.input_required,
