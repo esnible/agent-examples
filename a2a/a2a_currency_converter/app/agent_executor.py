@@ -38,12 +38,14 @@ class CurrencyAgentExecutor(AgentExecutor):
     ) -> None:
         error = self._validate_request(context)
         if error:
+            logger.warning(f'Invalid agent executor request: {context}')
             raise ServerError(error=InvalidParamsError())
 
         query = context.get_user_input()
         task = context.current_task
         if not task:
             task = new_task(context.message)
+            logger.info(f'Created task for message : {context.message}')
             event_queue.enqueue_event(task)
         updater = TaskUpdater(event_queue, task.id, task.contextId)
         try:
@@ -52,6 +54,7 @@ class CurrencyAgentExecutor(AgentExecutor):
                 require_user_input = item['require_user_input']
 
                 if not is_task_complete and not require_user_input:
+                    logger.info(f'Updating status for non-input task: {task.id}')
                     updater.update_status(
                         TaskState.working,
                         new_agent_text_message(
@@ -61,6 +64,7 @@ class CurrencyAgentExecutor(AgentExecutor):
                         ),
                     )
                 elif require_user_input:
+                    logger.info(f'Updating status for input task: {task.id}')
                     updater.update_status(
                         TaskState.input_required,
                         new_agent_text_message(
@@ -72,6 +76,7 @@ class CurrencyAgentExecutor(AgentExecutor):
                     )
                     break
                 else:
+                    logger.info('Adding artifact for item')
                     updater.add_artifact(
                         [Part(root=TextPart(text=item['content']))],
                         name='conversion_result',
@@ -81,6 +86,16 @@ class CurrencyAgentExecutor(AgentExecutor):
 
         except Exception as e:
             logger.error(f'An error occurred while streaming the response: {e}')
+            logger.info(msg=f'The error is a {type(e)}')
+            updater.update_status(
+                TaskState.input_required,
+                new_agent_text_message(
+                    "Internal error on the agent", # We don't show the error to the user, as it may have credentials
+                    task.contextId,
+                    task.id,
+                ),
+                final=True,
+            )
             raise ServerError(error=InternalError()) from e
 
     def _validate_request(self, context: RequestContext) -> bool:
