@@ -3,10 +3,11 @@ Example of the business logic of an A2A agent for currency conversion.
 """
 
 import logging
+import os
 
 from app.agent import CurrencyAgent
 
-from openai import AuthenticationError
+from openai import AuthenticationError, InternalServerError
 
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
@@ -88,6 +89,22 @@ class CurrencyAgentExecutor(AgentExecutor):
                     )
                     updater.complete()
                     break
+
+        except InternalServerError as e:
+            msg=f"""CurrencyAgentExecutor reports an InternalServerError error.\n
+This can happen if the LLM_API_BASE environment variable does not point to an OpenAI server.\n
+LLM_API_BASE is {os.getenv("LLM_API_BASE", "undefined")}\n
+{e}"""
+            logger.error(msg=msg)
+            updater.update_status(
+                TaskState.input_required,
+                new_agent_text_message(
+                    msg,
+                    task.contextId,
+                    task.id,
+                ),
+                final=True,
+            )
 
         except AuthenticationError as e:
             msg=f"""CurrencyAgentExecutor reports an authentication error.\n
