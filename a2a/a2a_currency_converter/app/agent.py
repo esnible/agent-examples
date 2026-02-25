@@ -68,7 +68,7 @@ class ResponseFormat(BaseModel):
 
 
 class CurrencyAgent:
-    """CurrencyAgent - a specialized assistant for currency convesions."""
+    """CurrencyAgent - a specialized assistant for currency conversions."""
 
     SYSTEM_INSTRUCTION = (
         'You are a specialized assistant for currency conversions. '
