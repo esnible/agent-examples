@@ -19,7 +19,8 @@ memory = MemorySaver()
 class Configuration(BaseSettings):
     llm_model: str = "gpt-4o"
     llm_api_base: str = ""
-    llm_api_key: str = os.getenv("OPENAI_API_KEY")
+    # We don't want the pod to crash without a valid key.  Report authentication error to A2A user instead.
+    llm_api_key: str = os.getenv("OPENAI_API_KEY", "Failed to load env var OPENAI_API_KEY")
 
 
 config = Configuration()
@@ -68,7 +69,7 @@ class ResponseFormat(BaseModel):
 
 
 class CurrencyAgent:
-    """CurrencyAgent - a specialized assistant for currency convesions."""
+    """CurrencyAgent - a specialized assistant for currency conversions."""
 
     SYSTEM_INSTRUCTION = (
         'You are a specialized assistant for currency conversions. '
