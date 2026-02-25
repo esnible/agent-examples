@@ -25,17 +25,41 @@ jobs:
             path: ./a2a
           - name: a2a_currency_converter
             path: ./a2a
+          - name: file_organizer
+            path: ./a2a
+          - name: generic_agent
+            path: ./a2a
+          - name: git_issue_agent
+            path: ./a2a
+          - name: image_service
+            path: ./a2a
+          - name: reservation_service
+            path: ./a2a
+          - name: simple_generalist
+            path: ./a2a
           - name: slack_researcher
             path: ./a2a
           - name: weather_service
             path: ./a2a
-          - name: reservation_service
-            path: ./a2a
-          - name: weather_tool
+          - name: appworld_apis
+            path: ./mcp
+          - name: cloud_storage_tool
+            path: ./mcp
+          - name: flight_tool
+            path: ./mcp
+          - name: github_tool
+            path: ./mcp
+          - name: image_tool
+            path: ./mcp
+          - name: movie_tool
+            path: ./mcp
+          - name: reservation_tool
+            path: ./mcp
+          - name: shopping_tool
             path: ./mcp
           - name: slack_tool
             path: ./mcp
-          - name: reservation_tool
+          - name: weather_tool
             path: ./mcp
 
     steps:
@@ -63,6 +87,8 @@ jobs:
           tags: |
             # extract tag from git ref, e.g., v1.0.0 -> 1.0.0
             type=ref,event=tag
+            # also tag as latest on tag push
+            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
 
       - name: Build and push ${{ matrix.image_config.name }}
         uses: docker/build-push-action@v6
