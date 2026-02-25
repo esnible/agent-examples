@@ -1,4 +1,12 @@
+"""
+Example of the business logic of an A2A agent for currency conversion.
+"""
+
 import logging
+
+from app.agent import CurrencyAgent
+
+from openai import AuthenticationError
 
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
@@ -17,9 +25,6 @@ from a2a.utils import (
     new_task,
 )
 from a2a.utils.errors import ServerError
-
-from app.agent import CurrencyAgent
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -84,13 +89,21 @@ class CurrencyAgentExecutor(AgentExecutor):
                     updater.complete()
                     break
 
+        except AuthenticationError as e:
+            logger.error(f"""CurrencyAgentExecutor reports an authentication error.
+            When deploying this agent, define environment variable OPENAI_API_KEY manually, or by importing https://github.com/kagenti/agent-examples/blob/main/a2a/a2a_currency_converter/.env.openai
+            The key should match your OpenAI key.
+            {e}""")
+
         except Exception as e:
             logger.error(f'An error occurred while streaming the response: {e}')
             logger.info(msg=f'The error is a {type(e)}')
             updater.update_status(
                 TaskState.input_required,
                 new_agent_text_message(
-                    "Internal error on the agent", # We don't show the error to the user, as it may have credentials
+                    # We don't show the error to the user, as it may have credentials
+                    """Internal error on the agent.
+                    Use `kubectl -n <namespace> logs deployment/<agent-name>` for details""",
                     task.contextId,
                     task.id,
                 ),
@@ -98,10 +111,10 @@ class CurrencyAgentExecutor(AgentExecutor):
             )
             raise ServerError(error=InternalError()) from e
 
-    def _validate_request(self, context: RequestContext) -> bool:
+    def _validate_request(self, _: RequestContext) -> bool:
         return False
 
     async def cancel(
-        self, request: RequestContext, event_queue: EventQueue
+        self, _: RequestContext, event_queue: EventQueue
     ) -> Task | None:
         raise ServerError(error=UnsupportedOperationError())
