@@ -91,9 +91,12 @@ class CurrencyAgentExecutor(AgentExecutor):
                     break
 
         except InternalServerError as e:
-            msg=f"""CurrencyAgentExecutor reports an InternalServerError error.\n
-This can happen if the agent's LLM_API_BASE environment variable does not point to an OpenAI server.\n
-LLM_API_BASE is {os.getenv("LLM_API_BASE", "undefined")}\n
+            msg=f"""CurrencyAgentExecutor reports an InternalServerError error.
+
+This can happen if the agent's LLM_API_BASE environment variable does not point to an OpenAI server.
+
+LLM_API_BASE is {os.getenv("LLM_API_BASE", "undefined")}
+
 Error: {e}"""
             logger.error(msg=msg)
             updater.update_status(
@@ -107,12 +110,15 @@ Error: {e}"""
             )
 
         except AuthenticationError as e:
-            msg=f"""CurrencyAgentExecutor reports an authentication error.\n
+            msg=f"""CurrencyAgentExecutor reports an authentication error.
+
 When importing this agent into Kagenti, expand Environment Variables and Add Variable,
-or import https://github.com/kagenti/agent-examples/blob/main/a2a/a2a_currency_converter/.env.openai\n
+or import https://github.com/kagenti/agent-examples/blob/main/a2a/a2a_currency_converter/.env.openai
+
 Also check
-`oc -n team1 get secret openai-secret -o jsonpath="{'{'}.data.apikey{'}'}" | base64 -d`
-The key should match your OpenAI key.\n
+`kubectl -n <namespace> get secret openai-secret -o jsonpath="{'{'}.data.apikey{'}'}" | base64 -d`
+The key should match your OpenAI key.
+
 {e}"""
             logger.error(msg=msg)
             updater.update_status(
