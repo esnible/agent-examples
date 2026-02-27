@@ -51,7 +51,7 @@ def main(host, port):
             name='Currency Agent',
             description='Helps with exchange rates for currencies',
             # url=f'http://{host}:{port}/',
-            url=f'http://a2a-currency-converter-v3.team1.localtest.me:8080/',
+            # url=f'http://a2a-currency-converter-v3.team1.localtest.me:8080/',
             version='1.0.0',
             defaultInputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             defaultOutputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
