@@ -80,11 +80,16 @@ class ImageTaskEventEmitter:
 class ImageExecutor(AgentExecutor):
     async def execute(self, context: RequestContext, event_queue: EventQueue):
         """Fetch an image (base64) from the MCP image_tool and return it to the UI."""
+        logger.debug(f'In ImageExecutor.execute for context: {context}')
         task = context.current_task
         if not task:
+            logger.debug('ImageExecutor.execute creating task')
             task = new_task(context.message)  
+            logger.debug('ImageExecutor.execute enqueuing task')
             await event_queue.enqueue_event(task)
+        logger.debug('ImageExecutor.execute creating task updater')
         task_updater = TaskUpdater(event_queue, task.id, task.context_id)
+        logger.debug('ImageExecutor.execute creating event emitter')
         event_emitter = ImageTaskEventEmitter(task_updater)
 
         try:
@@ -100,11 +105,14 @@ class ImageExecutor(AgentExecutor):
                 await event_emitter.emit_event(f"Error: Cannot connect to MCP image service at {os.getenv('MCP_URL', 'http://localhost:8000/mcp')}. Please ensure the image MCP server is running. Error: {tool_error}", failed=True)
                 return
 
+            logger.debug('ImageExecutor.execute creating graph')
             graph = await get_graph(mcpclient)
             messages = [HumanMessage(content=context.get_user_input())]
             graph_input = {"messages": messages}
             output = None
+            logger.debug('ImageExecutor.execute iterating over graph stream')
             async for event in graph.astream(graph_input, stream_mode="updates"):
+                logger.debug('ImageExecutor.execute emitting event from graph stream: %s', event)
                 await event_emitter.emit_event(
                     "\n".join(
                         f"{key}: {str(value)[:256] + '...' if len(str(value)) > 256 else str(value)}"
@@ -119,7 +127,8 @@ class ImageExecutor(AgentExecutor):
                     logger.error(err_msg)
                     await event_emitter.emit_event(err_msg, failed=True)
                     return  
-        
+
+            logger.debug('ImageExecutor.execute looking for final answer')
             result = output.get("assistant", {}).get("final_answer")
 
             if not result:
@@ -137,7 +146,9 @@ class ImageExecutor(AgentExecutor):
 
             try:
                 # Check if it looks like our image result structure
+                logger.debug('ImageExecutor.execute checking for image')
                 if isinstance(result, dict) and "image_base64" in result:
+                    logger.debug('ImageExecutor.execute found image')
                     image_base64 = result.get("image_base64")
                     image_url = result.get("url")
 
@@ -157,31 +168,37 @@ class ImageExecutor(AgentExecutor):
                         )
                     ]
 
+                    logger.debug('ImageExecutor.execute adding artifact')
                     await task_updater.add_artifact(parts, name="image.png")
                     await task_updater.complete()
                     return
                 
                 # Fallback: treat as text
                 if not result or (isinstance(result, str) and result.strip() == ""):
+                    logger.debug('ImageExecutor.execute emitting text')
                     await event_emitter.emit_event(
                         "I am here to help with image requests. Please ask for an image with specific dimensions.",
                         final=True
                     )
                 else:
+                    logger.debug('ImageExecutor.execute emitting result event')
                     await event_emitter.emit_event(str(result), final=True)
                 return
             except Exception as e:
+                logger.debug(f'ImageExecutor.execute got exception {e} while emitting result')
                 err_msg = f"Error processing graph result: {e}"
                 await event_emitter.emit_event(err_msg, failed=True)
                 return
 
         except Exception as e:
+            logger.debug(f'ImageExecutor.execute got exception {e}')
             logger.exception('Graph execution error')
             await event_emitter.emit_event(f"Error: Failed to process image request. {type(e).__name__}: {str(e)}", failed=True)
             return
 
     async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Not implemented"""
+        logger.info(f'ImageExecutor.cancel returning "not supported"')
         raise NotImplementedError("cancel not supported")
 
 def run():
