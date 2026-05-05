@@ -34,7 +34,7 @@ def get_mcpclient() -> MultiServerMCPClient:
 
     Returns:
         MultiServerMCPClient instance (may have empty configs if all servers fail)
-    
+
     Note:
         This function is not cached to allow retry on transient failures.
         Each call creates a new client instance.
@@ -118,7 +118,7 @@ def load_skills_content() -> str:
 
     Returns:
         Combined skill content as a string, or empty string if no skills found
-    
+
     Note:
         Content is limited to 100KB total to avoid exceeding LLM context windows
         and ConfigMap size limits (1 MiB). A warning is logged if this limit is exceeded.
@@ -212,13 +212,13 @@ def load_skills_content() -> str:
         loaded_count = len(skills_content)
         final_content = "\n\n" + "\n\n---\n\n".join(skills_content)
         logger.info(f"Successfully loaded {loaded_count} skill(s), total size: {len(final_content)} bytes")
-        
+
         if len(final_content) > MAX_CONTENT_SIZE:
             logger.warning(
                 f"Total skill content size ({len(final_content)} bytes) exceeds recommended limit "
                 f"({MAX_CONTENT_SIZE} bytes). This may impact LLM context window and ConfigMap limits."
             )
-        
+
         return final_content
 
     logger.info("No skills loaded")
