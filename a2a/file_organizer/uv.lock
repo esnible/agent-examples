@@ -488,14 +488,14 @@ dependencies = [
 requires-dist = [
     { name = "a2a-sdk", specifier = ">=0.3.26" },
     { name = "langchain-community", specifier = ">=0.4.1" },
-    { name = "langchain-core", specifier = ">=1.2.31" },
+    { name = "langchain-core", specifier = ">=1.3.1" },
     { name = "langchain-mcp-adapters", specifier = ">=0.1.0" },
     { name = "langchain-ollama", specifier = ">=0.2.1" },
     { name = "langchain-openai", specifier = ">=0.3.7" },
     { name = "langgraph", specifier = ">=0.2.55" },
-    { name = "openinference-instrumentation-langchain", specifier = ">=0.1.62" },
+    { name = "openinference-instrumentation-langchain", specifier = ">=0.1.63" },
     { name = "opentelemetry-exporter-otlp" },
-    { name = "pydantic-settings", specifier = ">=2.8.1" },
+    { name = "pydantic-settings", specifier = ">=2.14.0" },
     { name = "python-keycloak", specifier = ">=7.1.1" },
     { name = "python-multipart", specifier = ">=0.0.22" },
     { name = "urllib3", specifier = ">=2.6.3" },
@@ -997,10 +997,11 @@ wheels = [
 
 [[package]]
 name = "langchain-core"
-version = "1.3.0"
+version = "1.3.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jsonpatch" },
+    { name = "langchain-protocol" },
     { name = "langsmith" },
     { name = "packaging" },
     { name = "pydantic" },
@@ -1009,9 +1010,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "uuid-utils" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/92/fe/20190232d9b513242899dbb0c2bb77e31b4d61e343743adbe90ebc2603d2/langchain_core-1.3.0.tar.gz", hash = "sha256:14a39f528bf459aa3aa40d0a7f7f1bae7520d435ef991ae14a4ceb74d8c49046", size = 860755 }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/ae/8b74458fc3850ec3d150eb9f45e857db129dafa801fb5cf173dfc9f8bbf3/langchain_core-1.3.3.tar.gz", hash = "sha256:fa510a5db8efdc0c6ff41c0939fb5c00a0183c11f6b84233e892e3227ff69182", size = 915041 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f8/e2/dbfa347aa072a6dc4cd38d6f9ebfc730b4c14c258c47f480f4c5c546f177/langchain_core-1.3.0-py3-none-any.whl", hash = "sha256:baf16ee028475df177b9ab8869a751c79406d64a6f12125b93802991b566cced", size = 515140 },
+    { url = "https://files.pythonhosted.org/packages/1f/01/4771b7ab2af1d1aba5b710bd8f13d9225c609425214b357590a17b01be77/langchain_core-1.3.3-py3-none-any.whl", hash = "sha256:18aae8506f37da7f74398492279a7d6efcee4f8e23c4c41c7af080eeb7ef7bd1", size = 543857 },
 ]
 
 [[package]]
@@ -1053,6 +1054,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b3/3c/edb7ffca76fdcfd938ce8380bf8ec79a0a8be41ba7fdbf6f9fe1cb5fd1a8/langchain_openai-1.0.2.tar.gz", hash = "sha256:621e8295c52db9a1fc74806a0bd227ea215c132c6c5e421d2982c9ee78468769", size = 1025578 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/78/9b/7af1d539a051d195c5ecc5990ebd483f208c40f75a8a9532846d16762704/langchain_openai-1.0.2-py3-none-any.whl", hash = "sha256:b3eb9b82752063b46452aa868d8c8bc1604e57631648c3bc325bba58d3aeb143", size = 81934 },
+]
+
+[[package]]
+name = "langchain-protocol"
+version = "0.0.15"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4f/24/9777489d6fbbee64af0c8f96d4f840239c408cf694f3394672807dafc490/langchain_protocol-0.0.15.tar.gz", hash = "sha256:9ab2d11ee73944754f10e037e717098d3a6796f0e58afa9cadda6154e7655ade", size = 5862 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/7a/9c97a7b9cbe4c5dc6a44cdb1545450c28f0c8ce89b9c1f0ee7fbad896263/langchain_protocol-0.0.15-py3-none-any.whl", hash = "sha256:461eb794358f83d5e42635a5797799ffec7b4702314e34edf73ac21e75d3ef79", size = 6982 },
 ]
 
 [[package]]
@@ -1432,7 +1445,7 @@ wheels = [
 
 [[package]]
 name = "openinference-instrumentation-langchain"
-version = "0.1.62"
+version = "0.1.63"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-instrumentation" },
@@ -1442,9 +1455,9 @@ dependencies = [
     { name = "opentelemetry-semantic-conventions" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/03/02/4c17a89ac11a539eb6d8a31dce6484e880d104cc772d823bef9b9135267a/openinference_instrumentation_langchain-0.1.62.tar.gz", hash = "sha256:6bbfc59de52082ec0b464ed88361d2c8deb4e3c22bc4ad36d0c9f46154723cef", size = 75564 }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/ed/a752b9827f3d49c49580417103c05ee41defe9242a13e50bde06e71146b4/openinference_instrumentation_langchain-0.1.63.tar.gz", hash = "sha256:fcfd010f9c2577cc78c2dbace7000c0855ee24ec0d2891c99f4df51072596def", size = 75540 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/73/87/e7c41028b3c3ddfd89325d03571e640b54522ab235cdca2a14a14c61ed00/openinference_instrumentation_langchain-0.1.62-py3-none-any.whl", hash = "sha256:6fcf128c4f5d2e5ed353a728ae9af58b0903f9eb40f0c28a58e81319b1b91195", size = 24761 },
+    { url = "https://files.pythonhosted.org/packages/87/c2/3068ef467e0918d61c74fdfecd30a0cd44384a80d39046c957d5ff8e1611/openinference_instrumentation_langchain-0.1.63-py3-none-any.whl", hash = "sha256:c67f4c3e3a3848dfbb7f1c79fbe83f9501ebb7c6e297f624d719061cfc487162", size = 24746 },
 ]
 
 [[package]]
@@ -1970,16 +1983,16 @@ wheels = [
 
 [[package]]
 name = "pydantic-settings"
-version = "2.11.0"
+version = "2.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/20/c5/dbbc27b814c71676593d1c3f718e6cd7d4f00652cefa24b75f7aa3efb25e/pydantic_settings-2.11.0.tar.gz", hash = "sha256:d0e87a1c7d33593beb7194adb8470fc426e95ba02af83a0f23474a04c9a08180", size = 188394 }
+sdist = { url = "https://files.pythonhosted.org/packages/42/98/c8345dccdc31de4228c039a98f6467a941e39558da41c1744fbe29fa5666/pydantic_settings-2.14.0.tar.gz", hash = "sha256:24285fd4b0e0c06507dd9fdfd331ee23794305352aaec8fc4eb92d4047aeb67d", size = 235709 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/d6/887a1ff844e64aa823fb4905978d882a633cfe295c32eacad582b78a7d8b/pydantic_settings-2.11.0-py3-none-any.whl", hash = "sha256:fe2cea3413b9530d10f3a5875adffb17ada5c1e1bab0b2885546d7310415207c", size = 48608 },
+    { url = "https://files.pythonhosted.org/packages/01/dd/bebff3040138f00ae8a102d426b27349b9a49acc310fcae7f92112d867e3/pydantic_settings-2.14.0-py3-none-any.whl", hash = "sha256:fc8d5d692eb7092e43c8647c1c35a3ecd00e040fcf02ed86f4cb5458ca62182e", size = 60940 },
 ]
 
 [[package]]
